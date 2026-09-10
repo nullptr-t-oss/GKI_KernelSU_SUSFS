@@ -188,3 +188,14 @@ runs:
       run: |
         SYMBOL_LIST=android/abi_gki_aarch64_xiaomi
         echo "device_find_any_child" >> $SYMBOL_LIST
+
+    - name: Fix Audio problems on 6.1 GKI Devices
+      if: inputs.version == 'android14-6.1'
+      shell: bash
+      working-directory: ${{ github.workspace }}/kernel/common
+      run: |
+        set -uo pipefail
+
+        patch="$(mktemp)"
+        curl -sf https://git.codelinaro.org/clo/la/kernel/common/-/commit/0d18de045eba0dce19cd30b114d121ffe815f949.patch -o "${patch}"
+        patch --dry-run -p1 -R -i "${patch}" >/dev/null 2>&1 && patch -p1 -R -i "${patch}" || true
