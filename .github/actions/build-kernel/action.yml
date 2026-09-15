@@ -45,6 +45,16 @@ runs:
     working-directory: ${{ github.workspace }}/kernel
     run: |
       set -euo pipefail
+      # Nethunter (make builds only): ship newer rtw88 .ko files in the zip
+      if [ -d /home/runner/out ]; then
+        RTW_KOS=$(find /home/runner/out -path "*realtek/rtw88/*.ko" 2>/dev/null | head -n 50)
+        if [ -n "$RTW_KOS" ]; then
+          mkdir -p "${{ github.workspace }}/AnyKernel3/modules"
+          echo "$RTW_KOS" | while read -r ko; do cp "$ko" "${{ github.workspace }}/AnyKernel3/modules/"; done
+          sed -i 's/^do.modules=0/do.modules=1/' "${{ github.workspace }}/AnyKernel3/anykernel.sh"
+          echo "Shipped $(echo "$RTW_KOS" | wc -l) rtw88 modules"
+        fi
+      fi
       if [ -f "bazel-bin/common/kernel_aarch64/Image" ]; then
         echo "Found Image at bazel-bin/common/kernel_aarch64/Image"
         cp "bazel-bin/common/kernel_aarch64/Image" "${{ github.workspace }}/AnyKernel3/Image"

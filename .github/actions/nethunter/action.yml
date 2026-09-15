@@ -117,3 +117,18 @@ runs:
           CONFIG_USB_F_HID=y
           CONFIG_USB_CONFIGFS_F_HID=y
           CONFIG_USB_F_ACM=y
+
+    - name: Replace in-tree rtw88 with newer lwfinger/rtw88
+      shell: bash
+      working-directory: ${{ github.workspace }}/kernel/common/drivers/net/wireless/realtek
+      run: |
+        set -euo pipefail
+        # Newer Realtek 8812/8821 USB drivers than in-tree; kbuild-native
+        # Makefile (obj-m) so plain make picks it up once forced to m.
+        # No Kconfig in the clone, so blank the source line (unknown
+        # CONFIG_RTW88_* values in .config are dropped silently).
+        # NOTE: inert on bazel builds (6.1+) — those keep in-tree RTW88 built in.
+        rm -rf rtw88
+        git clone --depth=1 https://github.com/lwfinger/rtw88.git rtw88
+        sed -i 's/$(CONFIG_RTW88)/m/g' Makefile
+        sed -i '/^source "drivers\/net\/wireless\/realtek\/rtw88\/Kconfig"$/s/.*/ /' Kconfig
