@@ -1,0 +1,119 @@
+name: 'Setup Nethunter'
+description: 'Enable Kali NetHunter configs: USB WiFi adapters, SDR, CAN, USB serial, BT dongles, HID gadget (all builtin)'
+inputs:
+  version:
+    description: 'Kernel config version (e.g., android15-6.6)'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Enable Nethunter Configs
+      uses: ./.github/actions/set-kernel-config
+      with:
+        config_list: |
+          # Wireless stack
+          CONFIG_CFG80211=y
+          CONFIG_MAC80211=y
+          CONFIG_MAC80211_LEDS=y
+          CONFIG_MAC80211_RC_MINSTREL=y
+          CONFIG_RFKILL=y
+          # Atheros USB adapters (monitor mode / injection)
+          CONFIG_WLAN_VENDOR_ATH=y
+          CONFIG_ATH_COMMON=y
+          CONFIG_ATH9K=y
+          CONFIG_ATH9K_HW=y
+          CONFIG_ATH9K_COMMON=y
+          CONFIG_ATH9K_HTC=y
+          CONFIG_ATH10K=y
+          CONFIG_ATH10K_USB=y
+          CONFIG_ATH11K=y
+          # Ralink USB adapters
+          CONFIG_WLAN_VENDOR_RALINK=y
+          CONFIG_RT2X00=y
+          CONFIG_RT2800USB=y
+          CONFIG_RT2800USB_RT33XX=y
+          CONFIG_RT2800USB_RT35XX=y
+          CONFIG_RT2800USB_RT3573=y
+          CONFIG_RT2800USB_RT53XX=y
+          CONFIG_RT2800USB_RT55XX=y
+          CONFIG_RT2800USB_UNKNOWN=y
+          # Mediatek USB adapters
+          CONFIG_WLAN_VENDOR_MEDIATEK=y
+          CONFIG_MT7601U=y
+          CONFIG_MT76_CORE=y
+          CONFIG_MT76_USB=y
+          CONFIG_MT76x02_LIB=y
+          CONFIG_MT76x02_USB=y
+          CONFIG_MT76_CONNAC_LIB=y
+          CONFIG_MT7603E=y
+          CONFIG_MT76x2E=y
+          CONFIG_MT76x2U=y
+          CONFIG_MT76x0U=y
+          CONFIG_MT76x0E=y
+          CONFIG_MT7615_COMMON=y
+          CONFIG_MT7615E=y
+          CONFIG_MT7663_USB_SDIO_COMMON=y
+          CONFIG_MT7663U=y
+          CONFIG_MT7663S=y
+          CONFIG_MT7915E=y
+          CONFIG_MT7921E=y
+          # Realtek in-tree 802.11ac
+          CONFIG_WLAN_VENDOR_REALTEK=y
+          CONFIG_RTW88_CORE=y
+          CONFIG_RTW88_PCI=y
+          CONFIG_RTW88_USB=y
+          # Bluetooth USB dongles
+          CONFIG_BT_HCIBTUSB=y
+          CONFIG_BT_HCIBTUSB_BCM=y
+          CONFIG_BT_HCIBTUSB_RTL=y
+          CONFIG_BT_HCIVHCI=y
+          CONFIG_BT_HCIBCM203X=y
+          CONFIG_BT_HCIBPA10X=y
+          CONFIG_BT_HCIBFUSB=y
+          # SDR: Airspy & HackRF
+          CONFIG_USB_AIRSPY=y
+          CONFIG_USB_HACKRF=y
+          # CAN bus
+          CONFIG_CAN=y
+          CONFIG_CAN_DEV=y
+          CONFIG_CAN_CALC_BITTIMING=y
+          CONFIG_CAN_LEDS=y
+          CONFIG_CAN_VCAN=y
+          CONFIG_CAN_GRCAN=y
+          CONFIG_CAN_XILINXCAN=y
+          CONFIG_CAN_C_CAN=y
+          CONFIG_CAN_C_CAN_PLATFORM=y
+          CONFIG_CAN_C_CAN_PCI=y
+          CONFIG_CAN_CC770=y
+          CONFIG_CAN_CC770_ISA=y
+          CONFIG_CAN_CC770_PLATFORM=y
+          CONFIG_CAN_M_CAN=y
+          CONFIG_CAN_M_CAN_PCI=y
+          CONFIG_CAN_M_CAN_PLATFORM=y
+          CONFIG_CAN_M_CAN_TCAN4X5X=y
+          CONFIG_CAN_HI311X=y
+          CONFIG_CAN_MCP251X=y
+          CONFIG_CAN_8DEV_USB=y
+          CONFIG_CAN_EMS_USB=y
+          CONFIG_CAN_ESD_USB2=y
+          CONFIG_CAN_GS_USB=y
+          CONFIG_CAN_KVASER_USB=y
+          CONFIG_CAN_PEAK_USB=y
+          CONFIG_CAN_SLCAN=y
+          CONFIG_NETLINK_DIAG=y
+          CONFIG_VSOCKETS=y
+          CONFIG_NET_SCHED=y
+          CONFIG_NET_EMATCH_CANID=y
+          # USB serial adapters
+          CONFIG_USB_SERIAL=y
+          CONFIG_USB_SERIAL_CONSOLE=y
+          CONFIG_USB_SERIAL_GENERIC=y
+          CONFIG_USB_SERIAL_CH341=y
+          CONFIG_USB_SERIAL_FTDI_SIO=y
+          CONFIG_USB_SERIAL_PL2303=y
+          # HID gadget (BadUSB / DuckHunter attacks)
+          CONFIG_USB_CONFIGFS=y
+          CONFIG_USB_F_HID=y
+          CONFIG_USB_CONFIGFS_F_HID=y
+          CONFIG_USB_F_ACM=y
